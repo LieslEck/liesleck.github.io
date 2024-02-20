@@ -1,0 +1,49 @@
+---
+title: "Liesl Eckstrom"
+about:
+  id: intro-heading
+  template: trestles
+  image: images/profilepic.jpg
+  image-shape: round
+  links:
+    - icon: envelope
+      href: mailto:eckstr2@stolaf.edu
+    - icon: github
+      href: https://github.com/proback
+---
+
+This is a Quarto website.
+
+To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+
+::: {#intro-heading}
+## Liesl Eckstrom
+
+Student of Psychology @ [St. Olaf College](https://wp.stolaf.edu/)
+
+### Education
+
+High school Diploma <br> 2021 \| Hayward High School
+
+## Work Experience
+
+Retail
+Tremblay's Sweet Shop
+  June 2018 - August 2023
+
+Outdoor Ventures
+  June 2020- August 2022
+
+Lake Kids
+  June 2021 - August 2023
+
+
+:::
+
+### Get in Touch
+
+**Email**: <a href='mailto:eckstr2@stolaf.edu'>eckstr2 at stolaf.edu</a>
+
+**Address**: 16058 West 3rd Street, Hayward, WI 54843
+
+**Phone**: 715-450-3821

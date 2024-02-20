@@ -1,0 +1,30 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Liesl Eckstrom",
+    "section": "",
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+  },
+  {
+    "objectID": "index.html#liesl-eckstrom",
+    "href": "index.html#liesl-eckstrom",
+    "title": "Liesl Eckstrom",
+    "section": "Liesl Eckstrom",
+    "text": "Liesl Eckstrom\nStudent of Psychology @ St. Olaf College\n\nEducation\nHigh school Diploma  2021 | Hayward High School"
+  },
+  {
+    "objectID": "index.html#work-experience",
+    "href": "index.html#work-experience",
+    "title": "Liesl Eckstrom",
+    "section": "Work Experience",
+    "text": "Work Experience\nRetail Tremblay’s Sweet Shop June 2018 - August 2023\nOutdoor Ventures June 2020- August 2022\nLake Kids June 2021 - August 2023"
+  }
+]
