@@ -21,7 +21,7 @@ page-footer:
 
 format:
   html:
-    theme: zephyr
+    theme: litera
     css: styles.css
     toc: true
 

@@ -12,10 +12,6 @@ about:
       href: https://github.com/proback
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-
 ::: {#intro-heading}
 ## Liesl Eckstrom
 
@@ -44,6 +40,6 @@ Lake Kids
 
 **Email**: <a href='mailto:eckstr2@stolaf.edu'>eckstr2 at stolaf.edu</a>
 
-**Address**: 16058 West 3rd Street, Hayward, WI 54843
+**Address**: 1500 St. Olaf Ave, Northfield, MN 55057
 
 **Phone**: 715-450-3821
