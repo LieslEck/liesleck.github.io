@@ -2,6 +2,4 @@
 title: "Projects"
 ---
 
-About this site
-
-about this site
+This is where my projects will go!
