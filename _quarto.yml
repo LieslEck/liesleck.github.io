@@ -9,10 +9,17 @@ website:
       - href: index.qmd
         text: Home
       - projects.qmd
+      
+  sidebar:
+    - id: mini_project1
+      title: "Mini Project 1"
+      contents:
+        - 02_maps_part1.qmd
+        - 03_maps_part2.qmd
 
-page-footer:
+  page-footer:
     left: |
-      &copy; Paul Roback, 2024<br>
+      &copy; Liesl Eckstrom, 2024<br>
       All content licensed under <i class='bi-badge-cc'></i>
       [(CC BY-NC-SA 4.0)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
     right: |
