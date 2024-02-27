@@ -40,5 +40,12 @@
     "title": "Projects",
     "section": "",
     "text": "This is where my projects will go!"
+  },
+  {
+    "objectID": "maps.html",
+    "href": "maps.html",
+    "title": "US",
+    "section": "",
+    "text": "This is where my maps will go!"
   }
 ]

@@ -8,14 +8,14 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - projects.qmd
+      - sidebar:maps
+      
       
   sidebar:
-    - id: mini_project1
-      title: "Mini Project 1"
+    - id: maps
+      title: "Maps"
       contents:
-        - 02_maps_part1.qmd
-        - 03_maps_part2.qmd
+        - maps.qmd
 
   page-footer:
     left: |
