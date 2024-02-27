@@ -16,6 +16,7 @@ website:
       title: "Maps"
       contents:
         - maps.qmd
+        - second_graph.qmd
 
   page-footer:
     left: |

@@ -1,0 +1,51 @@
+---
+title: "Squirrels in the United States"
+author: "Liesl Eckstrom"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+library(readr)
+library(tidyverse)
+library(mdsr)
+library(dplyr)
+library(ggplot2)
+library(maps)
+```
+
+```{r, include = FALSE}
+squirrel_population_by_state_2024 <- read_csv("squirrel-population-by-state-2024.csv")
+```
+
+```{r, include = FALSE}
+#| message: false
+#| warning: false
+
+us_states <- map_data("state")
+head(us_states)
+```
+
+```{r, include = FALSE}
+us_squirrel<- us_states |>
+  mutate(state = title_case_states <- str_to_title(region)) |>
+  select(-c(region,subregion)) |>
+  inner_join(squirrel_population_by_state_2024) |>
+  select(- SquirrelPopulationSpeciesNames)
+```
+
+```{r, echo = FALSE}
+us_squirrel |>
+  ggplot(mapping = aes(x = long, y = lat,
+                          group = group)) + 
+  geom_polygon(aes(fill = SquirrelPopulationNumberOfMajorSquirrelSpecies), color = "white", linewidth = 0.4) + 
+  labs(fill = "# of Major 
+Squirrel 
+Species", title = "Number of Major Squirrel Species by State") +
+  # This scales the longitude and latitude so that the shapes look correct.
+  coord_map() + 
+  # This theme can give you a really clean look!
+  theme_void() + 
+  # you can change the fill scale for different color schemes.
+  scale_fill_continuous(high = "hotpink", low = "pink") 
+```
