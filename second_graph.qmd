@@ -42,7 +42,8 @@ us_squirrel |>
   geom_polygon(aes(fill = SquirrelPopulationNumberOfMajorSquirrelSpecies), color = "white", linewidth = 0.4) + 
   labs(fill = "# of Major 
 Squirrel 
-Species", title = "Number of Major Squirrel Species by State") +
+Species", title = "Number of Major Squirrel Species by State",
+caption = "data from: https://worldpopulationreview.com/") +
   # This scales the longitude and latitude so that the shapes look correct.
   coord_map() + 
   # This theme can give you a really clean look!
