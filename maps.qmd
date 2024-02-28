@@ -6,7 +6,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r}
+```{r, include = FALSE}
 library(tidyverse)
 library(mdsr)     
 library(sf)
@@ -19,7 +19,7 @@ library(leaflet)
 library(ggplot2)
 ```
 
-```{r}
+```{r, include = FALSE}
 #| message: false
 #| warning: false
 
@@ -30,7 +30,7 @@ results_house |>
 ```
 
 
-```{r}
+```{r, include = FALSE}
 #| message: false
 #| warning: false
 
@@ -41,8 +41,8 @@ district_elections <- results_house |>
   summarize(
     N = n(), 
     total_votes = sum(general_votes, na.rm = TRUE),
-    d_votes = sum(ifelse(party == "D", general_votes, 0), na.rm = TRUE),
-    r_votes = sum(ifelse(party == "R", general_votes, 0), na.rm = TRUE),
+    d_votes = sum(ifelse(party == "DEM", general_votes, 0), na.rm = TRUE),
+    r_votes = sum(ifelse(party == "REP", general_votes, 0), na.rm = TRUE),
     .groups = "drop"
   ) |>
   mutate(
@@ -57,7 +57,7 @@ wi_results |>
 ```
 
 
-```{r}
+```{r, include = FALSE}
 # distribution of total number of votes is narrow by design
 wi_results |>
   skim(total_votes) |>
@@ -82,7 +82,7 @@ wi_results |>
   arrange(desc(r_prop))
 ```
 
-```{r}
+```{r, include = FALSE}
 #| message: false
 #| warning: false
 
@@ -124,7 +124,7 @@ head(wi_merged, width = Inf)
 #   part of sf package
 ```
 
-```{r}
+```{r, echo = FALSE}
 # A leaflet map can allow us to zoom in and see where major cities fit, etc.
 pal <- colorNumeric(palette = "RdBu", domain = c(0, 1))
 
