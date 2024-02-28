@@ -1,5 +1,6 @@
 ---
 title: "Wisconsin Districts"
+author: "Liesl Eckstrom"
 sidebar: false
 editor_options: 
   chunk_output_type: console

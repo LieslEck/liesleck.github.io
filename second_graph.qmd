@@ -1,6 +1,7 @@
 ---
 title: "Squirrels in the United States"
 author: "Liesl Eckstrom"
+sidebar: false
 editor_options: 
   chunk_output_type: console
 ---
@@ -49,3 +50,5 @@ Species", title = "Number of Major Squirrel Species by State") +
   # you can change the fill scale for different color schemes.
   scale_fill_continuous(high = "hotpink", low = "pink") 
 ```
+
+This map of the United States shows the number of major squirrel species that live in each state. Ranging from 2 to 8 many states have a different number of squirrel species that live in them. This data is interesting to know to see what states have suitable environments and proper food supply for squirrels.

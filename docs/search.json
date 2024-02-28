@@ -47,5 +47,12 @@
     "title": "Wisconsin Districts",
     "section": "",
     "text": "This map of Wisconsin shows the 7 senate districts from 2016 and they are shaded according to proportion of votes for each party in that district (red = republican, blue = democrat). When you click on each district you also get two articles of information, which district you are looking at, and the proportion of republican votes in that district. This is important information because it tells us how much more or less than 50% each district votes republican and gives us an idea of voting demographics and why the districts may be split like they are."
+  },
+  {
+    "objectID": "second_graph.html",
+    "href": "second_graph.html",
+    "title": "Squirrels in the United States",
+    "section": "",
+    "text": "This map of the United States shows the number of major squirrel species that live in each state. Ranging from 2 to 8 many states have a different number of squirrel species that live in them. This data is interesting to know to see what states have suitable environments and proper food supply for squirrels."
   }
 ]
