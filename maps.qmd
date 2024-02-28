@@ -6,7 +6,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r, include = TRUE}
+```{r}
 library(tidyverse)
 library(mdsr)     
 library(sf)
@@ -19,7 +19,7 @@ library(leaflet)
 library(ggplot2)
 ```
 
-```{r, include = TRUE}
+```{r}
 #| message: false
 #| warning: false
 
@@ -30,7 +30,7 @@ results_house |>
 ```
 
 
-```{r, include=TRUE}
+```{r}
 #| message: false
 #| warning: false
 
@@ -57,7 +57,7 @@ wi_results |>
 ```
 
 
-```{r, include = TRUE}
+```{r}
 # distribution of total number of votes is narrow by design
 wi_results |>
   skim(total_votes) |>
@@ -82,7 +82,7 @@ wi_results |>
   arrange(desc(r_prop))
 ```
 
-```{r, include = TRUE}
+```{r}
 #| message: false
 #| warning: false
 
@@ -124,7 +124,7 @@ head(wi_merged, width = Inf)
 #   part of sf package
 ```
 
-```{r, echo = TRUE}
+```{r}
 # A leaflet map can allow us to zoom in and see where major cities fit, etc.
 pal <- colorNumeric(palette = "RdBu", domain = c(0, 1))
 
