@@ -29,11 +29,11 @@ results_house |>
 ```
 
 
-```{r, include = FALSE}
+```{r, include=FALSE}
 #| message: false
 #| warning: false
 
-# summary of the 13 congressional wi districts and the 2012 voting
+# summary of the 13 congressional NC districts and the 2012 voting
 district_elections <- results_house |>
   mutate(district = parse_number(district_id)) |>
   group_by(state, district) |>
