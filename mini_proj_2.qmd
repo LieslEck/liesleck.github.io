@@ -1,0 +1,63 @@
+---
+title: "Mini Project 2"
+author: "Liesl Eckstrom"
+sidebar: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+library(tidyverse)
+library(tidyr)
+library(Stat2Data)
+library(ggplot2)
+library(ggthemes)
+```
+
+```{r, include = FALSE}
+data("Handwriting")
+Handwriting
+```
+
+```{r, echo = FALSE}
+
+handwriting_small <- Handwriting |> 
+  drop_na() |>
+  mutate(gender = Gender, perc_correct = Both) |> 
+  select(gender, perc_correct) |>
+  group_by(gender) |>
+  summarize(avg_perc = mean(perc_correct))
+
+gender_diff <- handwriting_small[[2]][2] - handwriting_small[[2]][1]
+
+
+sim_gender_diffs <- vector("double", 1000)
+for(i in 1:1000) {
+  handwriting_small <- Handwriting |>
+    drop_na() |>
+    mutate(gender = Gender, 
+           perc_correct = Both, 
+           gender = sample(gender)) |>
+    group_by(gender) |>
+    summarize(avg_perc = mean(perc_correct))
+  sim_gender_diffs[[i]] <- handwriting_small[[2]][2] - handwriting_small[[2]][1]
+}  
+
+sim_null_world <- tibble(sim_gender_diffs = sim_gender_diffs)
+ggplot(sim_null_world, aes(x = sim_gender_diffs)) +
+  geom_histogram(aes(y = after_stat(density)), color = "lightgrey", fill = "lightgrey", binwidth = 0.5) +
+  geom_density(col = "black") +
+  geom_vline(xintercept = gender_diff, color = "hotpink") +
+  labs(title = "Simulated Null World",
+       subtitle = "with observation marker",
+       caption = "data from: Stat2Data package")+
+  theme_void()
+
+p_value <- sum(abs(sim_gender_diffs) >= abs(gender_diff)) / 1000
+p_value
+
+```
+For this project I used the Handwriting dataset from the Stat2Data R package. The Handwriting dataset comes from a survey where participants were asked to identify the gender of the author based on the handwriting presented. I chose to look at the relationship between gender of the participant and average performance (by gender) on the survey. I used a loop to simulate the null world by shuffling the data 1000 times and recording the difference of the average between genders after each one. 
+
+This graph shows the simulated null world distribution and has a vertical line marker that represents the real world observation. The p-value for this observation is **0**. This means that women's performance was statistically significantly higher than men's performance on the survey.
+

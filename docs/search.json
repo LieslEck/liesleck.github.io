@@ -54,5 +54,12 @@
     "title": "Squirrels in the United States",
     "section": "",
     "text": "This map of the United States shows the number of major squirrel species that live in each state. Ranging from 2 to 8 many states have a different number of squirrel species that live in them. This data is interesting to know to see what states have suitable environments and proper food supply for squirrels."
+  },
+  {
+    "objectID": "mini_proj_2.html",
+    "href": "mini_proj_2.html",
+    "title": "Mini Project 2",
+    "section": "",
+    "text": "[1] 0\n\n\nFor this project I used the Handwriting dataset from the Stat2Data R package. The Handwriting dataset comes from a survey where participants were asked to identify the gender of the author based on the handwriting presented. I chose to look at the relationship between gender of the participant and average performance (by gender) on the survey. I used a loop to simulate the null world by shuffling the data 1000 times and recording the difference of the average between genders after each one.\nThis graph shows the simulated null world distribution and has a vertical line marker that represents the real world observation. The p-value for this observation is 0. This means that women’s performance was statistically significantly higher than men’s performance on the survey."
   }
 ]

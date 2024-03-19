@@ -9,14 +9,20 @@ website:
       - href: index.qmd
         text: Home
       - sidebar:maps
-      
-      
+      - sidebar:projects
+  
   sidebar:
     - id: maps
       title: "Maps"
       contents:
         - maps.qmd
         - second_graph.qmd
+    
+    - id: projects
+      title: "Projects"
+      contents:
+        - mini_proj_2.qmd
+
 
   page-footer:
     left: |
