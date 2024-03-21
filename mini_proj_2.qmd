@@ -6,7 +6,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r, include = FALSE}
+```{r, echo = FALSE}
 library(tidyverse)
 library(tidyr)
 library(Stat2Data)
@@ -15,11 +15,11 @@ library(ggthemes)
 data("Handwriting")
 ```
 
-```{r, include = TRUE}
+```{r}
 t.test(Both ~ Gender, data = Handwriting)
 ```
 
-```{r, echo = TRUE}
+```{r}
 
 handwriting_small <- Handwriting |> 
   drop_na() |>
@@ -50,7 +50,7 @@ ggplot(sim_null_world, aes(x = sim_gender_diffs)) +
   geom_vline(xintercept = gender_diff, color = "hotpink") +
   labs(title = "Simulated Null World",
        subtitle = "with observation marker",
-       caption = "data from: Stat2Data package",
+       caption = "data from: Stat2Data package"
        ) +
   theme_void()
 
@@ -67,11 +67,8 @@ find_p(sim_gender_diffs, gender_diff)
 
 
 
-For this project I used the Handwriting dataset from the Stat2Data R package. The Handwriting dataset comes from a survey where participants were asked to identify the gender of the author based on the handwriting presented. I chose to look at the relationship between gender of the participant and average performance (by gender) on the survey. I used a loop to simulate the null world by shuffling the data 1000 times and recording the difference of the average between genders after each one. 
+For this project I used the Handwriting dataset from the Stat2Data R package. The Handwriting dataset comes from a survey where participants were asked to identify the gender of the author based on the handwriting presented. I chose to look at the relationship between gender of the participant and average performance (by gender) on the survey. The x-axis of the graph represents the simulated gender differences in average correct identification of handwriting. I used a loop to simulate the null world by shuffling the data 1000 times and recording the difference of the average between genders after each one. 
 
-This graph shows the simulated null world distribution and has a vertical line marker that represents the real world observation. The p-value for this observation is **0**. This means that women's performance was statistically significantly higher than men's performance on the survey.
+This graph shows the simulated null world distribution and has a vertical line marker that represents the real world observation. The p-value for this observation is < **0.001**. When I calculated the p-value for this observation (given my simulation of 1,000 events) I get the number 0 because my observation or something higher didn't happen in the 1,000 simulated trials, but the p-value is never truly exactly zero. The size of this p-value means that women's performance was statistically significantly higher than men's performance on the survey.
 
-**i know that my p_value is not actually zero, is this just because in the null world it didn't happen in 1,000 tries but it could potentially happen in the null world**
-
-**is it okay that there is no x lab because this theme doesn't support x labs I want consistency across the things on my website and my othe graph has this theme**
 
