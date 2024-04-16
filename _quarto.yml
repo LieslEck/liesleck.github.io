@@ -22,6 +22,8 @@ website:
       title: "Projects"
       contents:
         - mini_proj_2.qmd
+        - mini_proj_3.qmd
+        
 
 
   page-footer:

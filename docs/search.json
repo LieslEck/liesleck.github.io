@@ -61,5 +61,61 @@
     "title": "Mini Project 2",
     "section": "",
     "text": "library(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.4.4     ✔ tibble    3.2.1\n✔ lubridate 1.9.3     ✔ tidyr     1.3.1\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(tidyr)\nlibrary(Stat2Data)\nlibrary(ggplot2)\nlibrary(ggthemes)\ndata(\"Handwriting\")\n\n\nt.test(Both ~ Gender, data = Handwriting)\n\n\n    Welch Two Sample t-test\n\ndata:  Both by Gender\nt = -7.3944, df = 180.12, p-value = 5.174e-12\nalternative hypothesis: true difference in means between group 0 and group 1 is not equal to 0\n95 percent confidence interval:\n -14.532440  -8.410108\nsample estimates:\nmean in group 0 mean in group 1 \n       44.94382        56.41509 \n\n\n\nhandwriting_small &lt;- Handwriting |&gt; \n  drop_na() |&gt;\n  mutate(gender = Gender, perc_correct = Both) |&gt; \n  select(gender, perc_correct) |&gt;\n  group_by(gender) |&gt;\n  summarize(avg_perc = mean(perc_correct))\n\ngender_diff &lt;- handwriting_small[[2]][2] - handwriting_small[[2]][1]\n\n\nsim_gender_diffs &lt;- vector(\"double\", 1000)\nfor(i in 1:1000) {\n  handwriting_small &lt;- Handwriting |&gt;\n    drop_na() |&gt;\n    mutate(gender = Gender, \n           perc_correct = Both, \n           gender = sample(gender)) |&gt;\n    group_by(gender) |&gt;\n    summarize(avg_perc = mean(perc_correct))\n  sim_gender_diffs[[i]] &lt;- handwriting_small[[2]][2] - handwriting_small[[2]][1]\n}  \n\nsim_null_world &lt;- tibble(sim_gender_diffs = sim_gender_diffs)\nggplot(sim_null_world, aes(x = sim_gender_diffs)) +\n  geom_histogram(aes(y = after_stat(density)), color = \"lightgrey\", fill = \"lightgrey\", binwidth = 0.5) +\n  geom_density(col = \"black\") +\n  geom_vline(xintercept = gender_diff, color = \"hotpink\") +\n  labs(title = \"Simulated Null World\",\n       subtitle = \"with observation marker\",\n       caption = \"data from: Stat2Data package\"\n       ) +\n  theme_void()\n\n\n\nfind_p &lt;- function(x,y) {\n  p_value &lt;- sum(abs(x) &gt;= abs(y)) / 1000\n  \np_value\n}\n\nfind_p(sim_gender_diffs, gender_diff)\n\n[1] 0\n\n\nFor this project I used the Handwriting dataset from the Stat2Data R package. The Handwriting dataset comes from a survey where participants were asked to identify the gender of the author based on the handwriting presented. I chose to look at the relationship between gender of the participant and average performance (by gender) on the survey. The x-axis of the graph represents the simulated gender differences in average correct identification of handwriting. I used a loop to simulate the null world by shuffling the data 1000 times and recording the difference of the average between genders after each one.\nThis graph shows the simulated null world distribution and has a vertical line marker that represents the real world observation. The p-value for this observation is &lt; 0.001. When I calculated the p-value for this observation (given my simulation of 1,000 events) I get the number 0 because my observation or something higher didn’t happen in the 1,000 simulated trials, but the p-value is never truly exactly zero. The size of this p-value means that women’s performance was statistically significantly higher than men’s performance on the survey."
+  },
+  {
+    "objectID": "mini_proj_3.html",
+    "href": "mini_proj_3.html",
+    "title": "Mini Project 3",
+    "section": "",
+    "text": "In this mini project I am using string data, stringr functions, and regular expressions that we have been working with for a bit in class. I chose two data sets, KB_censored_lyrics and bigspotify, to learn more about Kidz Bop censoring tactics. On this page I will present three graphs that help to tell a story about the data I am using. The two data sets used for this project are from the github repositories, the pudding (Kidz Bop data) and tidytuesday (Spotify data).\n\n\nMy link for the pudding doesn't work, not sure how to get it to."
+  },
+  {
+    "objectID": "mini_proj_3.html#libraries-and-data",
+    "href": "mini_proj_3.html#libraries-and-data",
+    "title": "Mini Project 3",
+    "section": "Libraries and Data",
+    "text": "Libraries and Data\n\nlibrary(tidyverse)\nlibrary(rvest)\nlibrary(httr)\nlibrary(readr)\n\n\nbigspotify &lt;- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv')\n\nKB_censored_lyrics &lt;- read_csv(\"KB_censored-lyrics.csv\")"
+  },
+  {
+    "objectID": "mini_proj_3.html#data-wrangling",
+    "href": "mini_proj_3.html#data-wrangling",
+    "title": "Mini Project 3",
+    "section": "Data Wrangling",
+    "text": "Data Wrangling\n\nnew_spot &lt;- bigspotify |&gt;\n  mutate(year = str_replace(track_album_release_date, \"(\\\\d{4})-(\\\\d{2})-(\\\\d{2})\", \"\\\\1\"), \n         songName = str_to_lower(track_name))\n#making a new data set that changes release date to only year and changing \n#name and case of track_name from the spotify data set\n\n\nkb_plus_spotify &lt;- KB_censored_lyrics |&gt;\n  left_join(new_spot, join_by(songName == songName)) \n#joining the kids bop and spotify data\n\n\ncensor_type_and_genre &lt;- KB_censored_lyrics |&gt;\n  left_join(new_spot, join_by(songName == songName), relationship = \"many-to-many\") |&gt;\n  mutate(genre= ifelse(is.na(playlist_genre), \"no genre\", playlist_genre)) |&gt;\n  group_by(genre, category) |&gt;\n  summarize(n = n()) \n#create a new dataset that has the vectors playlist_genre, \n#category (of censor type), and number of times that particular censor\n#happens within the genre"
+  },
+  {
+    "objectID": "mini_proj_3.html#graph-1",
+    "href": "mini_proj_3.html#graph-1",
+    "title": "Mini Project 3",
+    "section": "Graph 1",
+    "text": "Graph 1\n\ncensor_type_and_genre |&gt;\n  ggplot(aes(x = n, y = reorder(genre, n), \n             fill = category)) +\n  geom_col() +\n  labs(title = \"Song Genre and Kidz Bop Censor Type\",\n       x = \"Number of Censors\", \n       y = \"Genre\",\n       fill = \"Censor Type\",\n       caption = \"data from https://github.com/rfordatascience/tidytuesday \n       and github.com/the-pudding/data\") +\n  scale_fill_ordinal() +\n  theme_bw()\n\n\n\n\nThis graph plots censor number and type from Kidz Bop songs grouped by genre. From this graph we can learn about the different genres of music that Kidz Bop censors, and the different censor types used by each genre. We can see that the most common song that Kidz Bop creates censored versions of is pop, followed by edm, r&b, latin, music that has no genre classification, rock, and lastly rap. This tells us about the kind of music that kids are interested in hearing because Kidz Bop would only censor and produce music that will do well with their target audience. From this graph we can also learn about the different types of censors that happen most in each genre type. For example in the pop genre we can see that alcohol & drugs is the most common censor type and the least common is identity.\n\nProblem!!\nIf you’re curious about the specific values of the variables represented in the graph I’ve created a tibble below with these numbers. if you have time actually make this 6 tibbles with the different genres\n\ntibble(censor_type_and_genre) |&gt;\n  mutate(\"Playlist Genre\" = genre,\n         \"Censor Type\" = category,\n         \"Number of Censors\" = n) |&gt;\n  select(-genre, -category, -n) \n\n# A tibble: 42 × 3\n   `Playlist Genre` `Censor Type`   `Number of Censors`\n   &lt;chr&gt;            &lt;chr&gt;                         &lt;int&gt;\n 1 edm              alcohol & drugs                 201\n 2 edm              identity                         15\n 3 edm              other                            60\n 4 edm              profanity                       107\n 5 edm              sexual                          167\n 6 edm              violence                         82\n 7 latin            alcohol & drugs                  98\n 8 latin            identity                         31\n 9 latin            other                            30\n10 latin            profanity                       109\n# ℹ 32 more rows\n\n#creates a tibble that shows the data used for the bar chart below \n#This tibble gives information about specific numbers of censors of each \n#type and genre"
+  },
+  {
+    "objectID": "mini_proj_3.html#graph-2",
+    "href": "mini_proj_3.html#graph-2",
+    "title": "Mini Project 3",
+    "section": "Graph 2",
+    "text": "Graph 2\n\ncensor_type_and_genre |&gt;\n  ggplot() +\n  geom_bar(aes(x = genre, y = n,\n             fill = category), position = \"fill\", stat = \"identity\") +\n  labs(title = \"Song Genre and Kidz Bop Censor Type\",\n       x = \"Genre\", \n       y = \"Proportion of Censor Type\",\n       fill = \"Censor Type\",\n       caption = \"data from https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv \n       and github.com/the-pudding/data\") +\n  scale_fill_ordinal() +\n  theme_bw()\n\n\n\n\nThis graph shows the proportion of each genre than a single censor type represents. From this graph we can make inferences about what kinds of censors are more or less common within the different genres of music that Kidz Bop remixes. For example we can see that, proportionally, rock music has a lot more violence censors than other music genres, even though it doesn’t have as many censors total. The importance of this graph is to show more comparative data with respect to the censor type than the other bar chart above."
+  },
+  {
+    "objectID": "mini_proj_3.html#intro",
+    "href": "mini_proj_3.html#intro",
+    "title": "Mini Project 3",
+    "section": "",
+    "text": "In this mini project I am using string data, stringr functions, and regular expressions that we have been working with for a bit in class. I chose two data sets, KB_censored_lyrics and bigspotify, to learn more about Kidz Bop censoring tactics. On this page I will present three graphs that help to tell a story about the data I am using. The two data sets used for this project are from the github repositories, the pudding (Kidz Bop data) and tidytuesday (Spotify data).\n\n\nMy link for the pudding doesn't work, not sure how to get it to."
+  },
+  {
+    "objectID": "mini_proj_3.html#graph-3",
+    "href": "mini_proj_3.html#graph-3",
+    "title": "Mini Project 3",
+    "section": "Graph 3",
+    "text": "Graph 3\n\nsongs &lt;- KB_censored_lyrics |&gt;\n  distinct(songName) \n\n  str_view(songs$songName, \"\\\\d+\")\n\n  [1] │ &lt;7&gt; rings\n [15] │ i gotta feeling - &lt;1461400&gt;\n [46] │ &lt;1985&gt;\n [49] │ &lt;24&gt;k magic\n [91] │ perfect (&lt;2017&gt;)\n[179] │ &lt;7&gt; years\n[182] │ &lt;4&gt; minutes\n\n\n\nKB_censored_lyrics |&gt;\n  count(ogArtist) |&gt;\n  arrange(n) |&gt;\n  summarize(mean_songs = mean(n),\n            max_songs = max(n),\n            min_songs = min(n),\n            sd_songs = sd(n),\n            med_songs = median(n)) \n\n# A tibble: 1 × 5\n  mean_songs max_songs min_songs sd_songs med_songs\n       &lt;dbl&gt;     &lt;int&gt;     &lt;int&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1       8.46        52         1     10.3         4\n\n # ggplot(aes(x = n)) +\n # geom_boxplot()\n\n\nKB_censored_lyrics |&gt;\n  count(ogArtist) |&gt;\n  arrange(n) |&gt;\n  ggplot(aes(x = n)) +\n  geom_boxplot()\n\n\n\n#prolly not\n\n\nKB_censored_lyrics |&gt;\n  count(ogArtist) |&gt;\n  arrange(n) |&gt;\n  ggplot(aes(x = n, y = ogArtist)) +\n  geom_point()\n\n\n\n#prolly not\n\n\nKB_censored_lyrics |&gt;\n  count(ogArtist) |&gt;\n  arrange(n) |&gt;\n  ggplot(aes(x = n)) +\n  geom_density()\n\n\n\n#attention"
+  },
+  {
+    "objectID": "mini_proj_3.html#problem",
+    "href": "mini_proj_3.html#problem",
+    "title": "Mini Project 3",
+    "section": "Problem",
+    "text": "Problem\nMy link for the pudding doesn't work, not sure how to get it to."
   }
 ]

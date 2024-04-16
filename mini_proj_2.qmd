@@ -65,10 +65,6 @@ find_p(sim_gender_diffs, gender_diff)
 
 ```
 
+For this project I used the Handwriting dataset from the Stat2Data R package. The Handwriting dataset comes from a survey where participants were asked to identify the gender of the author based on the handwriting presented. I chose to look at the relationship between gender of the participant and average performance (by gender) on the survey. The x-axis of the graph represents the simulated gender differences in average correct identification of handwriting. I used a loop to simulate the null world by shuffling the data 1000 times and recording the difference of the average between genders after each one.
 
-
-For this project I used the Handwriting dataset from the Stat2Data R package. The Handwriting dataset comes from a survey where participants were asked to identify the gender of the author based on the handwriting presented. I chose to look at the relationship between gender of the participant and average performance (by gender) on the survey. The x-axis of the graph represents the simulated gender differences in average correct identification of handwriting. I used a loop to simulate the null world by shuffling the data 1000 times and recording the difference of the average between genders after each one. 
-
-This graph shows the simulated null world distribution and has a vertical line marker that represents the real world observation. The p-value for this observation is < **0.001**. When I calculated the p-value for this observation (given my simulation of 1,000 events) I get the number 0 because my observation or something higher didn't happen in the 1,000 simulated trials, but the p-value is never truly exactly zero. The size of this p-value means that women's performance was statistically significantly higher than men's performance on the survey.
-
-
+This graph shows the simulated null world distribution and has a vertical line marker that represents the real world observation. The p-value for this observation is \< **0.001**. When I calculated the p-value for this observation (given my simulation of 1,000 events) I get the number 0 because my observation or something higher didn't happen in the 1,000 simulated trials, but the p-value is never truly exactly zero. The size of this p-value means that women's performance was statistically significantly higher than men's performance on the survey.

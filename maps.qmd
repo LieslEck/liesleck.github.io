@@ -29,7 +29,6 @@ results_house |>
   summarize(N = n())
 ```
 
-
 ```{r, include = FALSE}
 #| message: false
 #| warning: false
@@ -55,7 +54,6 @@ wi_results <- district_elections |>
 wi_results |>                  
   select(-state)
 ```
-
 
 ```{r, include = FALSE}
 # distribution of total number of votes is narrow by design
@@ -139,5 +137,4 @@ leaflet_wi <- leaflet(wi_merged) |>
 leaflet_wi
 ```
 
-
-This map of Wisconsin shows the 7 senate districts from 2016 and they are shaded according to proportion of votes for each party in that district (red = republican, blue = democrat). When you click on each district you also get two articles of information, which district you are looking at, and the proportion of republican votes in that district. This is important information because it tells us how much more or less than 50% each district votes republican and gives us an idea of voting demographics and why the districts may be split like they are. 
+This map of Wisconsin shows the 7 senate districts from 2016 and they are shaded according to proportion of votes for each party in that district (red = republican, blue = democrat). When you click on each district you also get two articles of information, which district you are looking at, and the proportion of republican votes in that district. This is important information because it tells us how much more or less than 50% each district votes republican and gives us an idea of voting demographics and why the districts may be split like they are.

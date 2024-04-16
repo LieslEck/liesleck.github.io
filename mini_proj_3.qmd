@@ -1,0 +1,163 @@
+---
+title: "Mini Project 3"
+author: "Liesl Eckstrom"
+sidebar: false
+editor_options: 
+  chunk_output_type: console
+---
+## Intro
+
+In this mini project I am using string data, stringr functions, and regular expressions that we have been working with for a bit in class. I chose two data sets, KB_censored_lyrics and bigspotify, to learn more about Kidz Bop censoring tactics. On this page I will present three graphs that help to tell a story about the data I am using. The two data sets used for this project are from the github repositories, [the pudding](github.com/the-pudding/data) (Kidz Bop data) and [tidytuesday](https://github.com/rfordatascience/tidytuesday) (Spotify data).
+
+### Problem!!
+    My link for the pudding doesn't work, not sure how to get it to. 
+
+## Libraries and Data
+
+```{r, echo=TRUE, include = TRUE}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(rvest)
+library(httr)
+library(readr)
+```
+
+```{r, echo=TRUE, include = TRUE, message=FALSE}
+bigspotify <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv')
+
+KB_censored_lyrics <- read_csv("KB_censored-lyrics.csv")
+```
+
+## Data Wrangling
+
+```{r, echo=TRUE, include = TRUE, message=FALSE}
+new_spot <- bigspotify |>
+  mutate(year = str_replace(track_album_release_date, "(\\d{4})-(\\d{2})-(\\d{2})", "\\1"), 
+         songName = str_to_lower(track_name))
+#making a new data set that changes release date to only year and changing 
+#name and case of track_name from the spotify data set
+```
+
+```{r, echo=TRUE, include = TRUE, message=FALSE, warning=FALSE}
+kb_plus_spotify <- KB_censored_lyrics |>
+  left_join(new_spot, join_by(songName == songName)) 
+#joining the kids bop and spotify data
+```
+
+```{r, echo=TRUE, include = TRUE, message=FALSE}
+censor_type_and_genre <- KB_censored_lyrics |>
+  left_join(new_spot, join_by(songName == songName), relationship = "many-to-many") |>
+  mutate(genre= ifelse(is.na(playlist_genre), "no genre", playlist_genre)) |>
+  group_by(genre, category) |>
+  summarize(n = n()) 
+#create a new dataset that has the vectors playlist_genre, 
+#category (of censor type), and number of times that particular censor
+#happens within the genre
+```
+
+## Graph 1
+
+```{r}
+censor_type_and_genre |>
+  ggplot(aes(x = n, y = reorder(genre, n), 
+             fill = category)) +
+  geom_col() +
+  labs(title = "Song Genre and Kidz Bop Censor Type",
+       x = "Number of Censors", 
+       y = "Genre",
+       fill = "Censor Type",
+       caption = "data from https://github.com/rfordatascience/tidytuesday 
+       and github.com/the-pudding/data") +
+  scale_fill_ordinal() +
+  theme_bw()
+```
+
+This graph plots censor number and type from Kidz Bop songs grouped by genre. From this graph we can learn about the different genres of music that Kidz Bop censors, and the different censor types used by each genre. We can see that the most common song that Kidz Bop creates censored versions of is pop, followed by edm, r&b, latin, music that has no genre classification, rock, and lastly rap. This tells us about the kind of music that kids are interested in hearing because Kidz Bop would only censor and produce music that will do well with their target audience. From this graph we can also learn about the different types of censors that happen most in each genre type. For example in the pop genre we can see that alcohol & drugs is the most common censor type and the least common is identity.
+
+### Problem!!
+
+If you're curious about the specific values of the variables represented in the graph I've created a tibble below with these numbers. **if you have time actually make this 6 tibbles with the different genres**
+
+```{r}
+tibble(censor_type_and_genre) |>
+  mutate("Playlist Genre" = genre,
+         "Censor Type" = category,
+         "Number of Censors" = n) |>
+  select(-genre, -category, -n) 
+#creates a tibble that shows the data used for the bar chart below 
+#This tibble gives information about specific numbers of censors of each 
+#type and genre
+```
+
+## Graph 2
+
+```{r}
+censor_type_and_genre |>
+  ggplot() +
+  geom_bar(aes(x = genre, y = n,
+             fill = category), position = "fill", stat = "identity") +
+  labs(title = "Song Genre and Kidz Bop Censor Type",
+       x = "Genre", 
+       y = "Proportion of Censor Type",
+       fill = "Censor Type",
+       caption = "data from https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv 
+       and github.com/the-pudding/data") +
+  scale_fill_ordinal() +
+  theme_bw()
+```
+
+This graph shows the proportion of each genre than a single censor type represents. From this graph we can make inferences about what kinds of censors are more or less common within the different genres of music that Kidz Bop remixes. For example we can see that, proportionally, rock music has a lot more violence censors than other music genres, even though it doesn't have as many censors total. The importance of this graph is to show more comparative data with respect to the censor type than the other bar chart above.
+
+## Graph 3
+
+```{r}
+songs <- KB_censored_lyrics |>
+  distinct(songName) 
+
+  str_view(songs$songName, "\\d+")
+```
+
+
+```{r}
+KB_censored_lyrics |>
+  count(ogArtist) |>
+  arrange(n) |>
+  summarize(mean_songs = mean(n),
+            max_songs = max(n),
+            min_songs = min(n),
+            sd_songs = sd(n),
+            med_songs = median(n)) 
+
+ # ggplot(aes(x = n)) +
+ # geom_boxplot()
+```
+
+
+```{r}
+KB_censored_lyrics |>
+  count(ogArtist) |>
+  arrange(n) |>
+  ggplot(aes(x = n)) +
+  geom_boxplot()
+#prolly not
+```
+
+```{r}
+KB_censored_lyrics |>
+  count(ogArtist) |>
+  arrange(n) |>
+  ggplot(aes(x = n, y = ogArtist)) +
+  geom_point()
+#prolly not
+```
+
+```{r}
+KB_censored_lyrics |>
+  count(ogArtist) |>
+  arrange(n) |>
+  ggplot(aes(x = n)) +
+  geom_density()
+#attention
+```
