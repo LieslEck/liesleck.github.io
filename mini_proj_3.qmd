@@ -36,8 +36,7 @@ KB_censored_lyrics <- read_csv("KB_censored-lyrics.csv")
 new_spot <- bigspotify |>
   mutate(year = str_replace(track_album_release_date, "(\\d{4})-(\\d{2})-(\\d{2})", "\\1"), 
          songName = str_to_lower(track_name))
-#making a new data set that changes release date to only year and changing 
-#name and case of track_name from the spotify data set
+#making a new data set that changes release date to only year and changing name and case of track_name from the spotify data set
 ```
 
 ```{r, echo=TRUE, include = TRUE, message=FALSE, warning=FALSE}
@@ -52,9 +51,7 @@ censor_type_and_genre <- KB_censored_lyrics |>
   mutate(genre= ifelse(is.na(playlist_genre), "no genre", playlist_genre)) |>
   group_by(genre, category) |>
   summarize(n = n()) 
-#create a new dataset that has the vectors playlist_genre, 
-#category (of censor type), and number of times that particular censor
-#happens within the genre
+#create a new dataset that has the vectors playlist_genre, category (of censor type), and number of times that particular censor happens within the genre
 ```
 
 ## Graph 1
@@ -86,9 +83,7 @@ tibble(censor_type_and_genre) |>
          "Censor Type" = category,
          "Number of Censors" = n) |>
   select(-genre, -category, -n) 
-#creates a tibble that shows the data used for the bar chart below 
-#This tibble gives information about specific numbers of censors of each 
-#type and genre
+#creates a tibble that shows the data used for the bar chart below, this tibble gives information about specific numbers of censors of each type and genre
 ```
 
 ## Graph 2
@@ -113,12 +108,76 @@ This graph shows the proportion of each genre than a single censor type represen
 ## Graph 3
 
 ```{r}
-songs <- KB_censored_lyrics |>
-  distinct(songName) 
-
-  str_view(songs$songName, "\\d+")
+years <- KB_censored_lyrics |>
+  count(year) 
+#creates a dataset with how many censors there are from each year represented in the dataset
 ```
 
+```{r}
+songs <- KB_censored_lyrics |>
+  count(year,songName) |>
+  count(year) |>
+  mutate(num_songs = n) |>
+  select(-n) |>
+  left_join(years, join_by(year)) |>
+  mutate(censors_per_song = n/num_songs) 
+#makes a tibble that gives me the information I need to make the next plot (year, number of songs remixed, number of censors, and number of censors per song)
+```
+
+```{r}
+songs |>
+  ggplot(aes(x = year, y = censors_per_song)) +
+  geom_point() +
+  geom_smooth(color = "limegreen", se = FALSE) +
+  labs(title = "Censors per Song by Year",
+       x = "Year",
+       y = "Censors per Song",
+       caption = "data from github.com/the-pudding/data") +
+  theme_bw()
+
+correlation_coefficient <- cor(songs$year, songs$censors_per_song)
+print(correlation_coefficient)
+```
+
+In this graph I have plotted censors per song against year. This graph can tell us about the relationship between the year and the average amount of censors used per song. Generally this graph has a positive relationship, but the year 
+
+
+```{r}
+songs_wo_2015 <- KB_censored_lyrics |>
+  count(year,songName) |>
+  count(year) |>
+  mutate(num_songs = n) |>
+  select(-n) |>
+  left_join(years, join_by(year)) |>
+  mutate(censors_per_song = n/num_songs) |>
+  filter(year != c(2015)) 
+#makes a tibble that gives me the information I need to make the next plot (year, number of songs remixed, number of censors, and number of censors per song, !-2015!)
+```
+
+```{r}
+songs_wo_2015 |>
+  ggplot(aes(x = year, y = censors_per_song)) +
+  geom_point() +
+  geom_smooth(color = "limegreen", se = FALSE) +
+  labs(title = "Censors per Song by Year",
+       x = "Year",
+       y = "Censors per Song",
+       caption = "data from github.com/the-pudding/data") +
+  theme_bw()
+
+correlation_coefficient <- cor(songs$year, songs$censors_per_song)
+print(correlation_coefficient)
+```
+
+## Graph 4
+
+```{r}
+KB_censored_lyrics |>
+  count(ogArtist) |>
+  arrange(-n) |>
+  ggplot(aes(x = n)) +
+  geom_density()
+```
 
 ```{r}
 KB_censored_lyrics |>
@@ -129,35 +188,20 @@ KB_censored_lyrics |>
             min_songs = min(n),
             sd_songs = sd(n),
             med_songs = median(n)) 
-
- # ggplot(aes(x = n)) +
- # geom_boxplot()
 ```
 
+From this plot we can learn about frequency of artist appearances in Kidz Bop remixes. Most artists have fewer than 20 censors on all their songs that appear, but there are some artists whose songs have up to 52 censors on their songs. This tells us about the kinds of songs that Kidz Bop is remixing. Kidz Bop likely doesn't remix songs that require a lot of time and money to produce, which would be the songs with more sections that need censoring. I also included summary statistics for the frequency of artist appearances if you want to see what the spread of the data was like. 
+
+## Bonus Tibble
 
 ```{r}
-KB_censored_lyrics |>
-  count(ogArtist) |>
-  arrange(n) |>
-  ggplot(aes(x = n)) +
-  geom_boxplot()
-#prolly not
+number_songs <- str_view(KB_censored_lyrics$songName, "\\d+")
+
+as_tibble(number_songs) |>
+  distinct(x) |>
+  mutate("songs with numbers" = x) |>
+  select(-x)
 ```
 
-```{r}
-KB_censored_lyrics |>
-  count(ogArtist) |>
-  arrange(n) |>
-  ggplot(aes(x = n, y = ogArtist)) +
-  geom_point()
-#prolly not
-```
+Here I also create a tibble that shows all of the songs that have a number in the title. Out of all 280 of the songs from the original data set, only 7 of them include numbers in the title.
 
-```{r}
-KB_censored_lyrics |>
-  count(ogArtist) |>
-  arrange(n) |>
-  ggplot(aes(x = n)) +
-  geom_density()
-#attention
-```
