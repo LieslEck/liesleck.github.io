@@ -71,7 +71,7 @@ songs <- KB_censored_lyrics |>
 
 ## Graph 1
 
-```{r}
+```{r, message=FALSE}
 censor_type_and_genre |>
   ggplot(aes(x = n, y = reorder(genre, n), 
              fill = category)) +
@@ -90,7 +90,7 @@ This graph plots censor number and type from Kidz Bop songs grouped by genre. Fr
 
 If you're curious about the specific values of the variables represented in the graph I've created a tibble below with these numbers.
 
-```{r}
+```{r, message=FALSE}
 tibble(censor_type_and_genre) |>
   mutate("Playlist Genre" = genre,
          "Censor Type" = category,
@@ -101,7 +101,7 @@ tibble(censor_type_and_genre) |>
 
 ## Graph 2
 
-```{r}
+```{r, message=FALSE}
 censor_type_and_genre |>
   ggplot() +
   geom_bar(aes(x = genre, y = n,
@@ -110,7 +110,7 @@ censor_type_and_genre |>
        x = "Genre", 
        y = "Proportion of Censor Type",
        fill = "Censor Type",
-       caption = "data from https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv 
+       caption = "data from https://github.com/rfordatascience/tidytuesday  
        and github.com/the-pudding/data") +
   scale_fill_ordinal() +
   theme_bw()
@@ -120,7 +120,7 @@ This graph shows the proportion of each genre than a single censor type represen
 
 ## Graph 3
 
-```{r}
+```{r, message=FALSE}
 songs |>
   ggplot(aes(x = year, y = censors_per_song)) +
   geom_point() +
@@ -139,7 +139,7 @@ In this graph I have plotted censors per song against year. This graph can tell 
 
 ## Graph 4
 
-```{r}
+```{r, message=FALSE}
 KB_censored_lyrics |>
   count(ogArtist) |>
   arrange(-n) |>
@@ -147,7 +147,7 @@ KB_censored_lyrics |>
   geom_density()
 ```
 
-```{r}
+```{r, message=FALSE}
 KB_censored_lyrics |>
   count(ogArtist) |>
   arrange(n) |>
@@ -163,7 +163,7 @@ From this plot we can learn about frequency of artist appearances in Kidz Bop re
 
 ## Bonus Tibble
 
-```{r}
+```{r, message=FALSE}
 number_songs <- str_view(KB_censored_lyrics$songName, "\\d+")
 
 as_tibble(number_songs) |>
