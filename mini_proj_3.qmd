@@ -5,12 +5,10 @@ sidebar: false
 editor_options: 
   chunk_output_type: console
 ---
+
 ## Intro
 
-In this mini project I am using string data, stringr functions, and regular expressions that we have been working with for a bit in class. I chose two data sets, KB_censored_lyrics and bigspotify, to learn more about Kidz Bop censoring tactics. On this page I will present three graphs that help to tell a story about the data I am using. The two data sets used for this project are from the github repositories, [the pudding](github.com/the-pudding/data) (Kidz Bop data) and [tidytuesday](https://github.com/rfordatascience/tidytuesday) (Spotify data).
-
-### Problem!!
-    My link for the pudding doesn't work, not sure how to get it to. 
+In this mini project I am using string data, stringr functions, and regular expressions that we have been working with for a bit in class. I chose two data sets, KB_censored_lyrics and bigspotify, to learn more about Kidz Bop censoring tactics. On this page I will present three graphs that help to tell a story about the data I am using. The two data sets used for this project are from the github repositories, [the pudding](https://github.com/the-pudding/data/tree/master/kidz-bop) (Kidz Bop data) and [tidytuesday](https://github.com/rfordatascience/tidytuesday) (Spotify data).
 
 ## Libraries and Data
 
@@ -54,6 +52,23 @@ censor_type_and_genre <- KB_censored_lyrics |>
 #create a new dataset that has the vectors playlist_genre, category (of censor type), and number of times that particular censor happens within the genre
 ```
 
+```{r, echo=TRUE, include = TRUE, message=FALSE}
+years <- KB_censored_lyrics |>
+  count(year) 
+#creates a data set with how many censors there are from each year represented in the data set
+```
+
+```{r, echo=TRUE, include = TRUE, message=FALSE}
+songs <- KB_censored_lyrics |>
+  count(year,songName) |>
+  count(year) |>
+  mutate(num_songs = n) |>
+  select(-n) |>
+  left_join(years, join_by(year)) |>
+  mutate(censors_per_song = n/num_songs) 
+#makes a tibble that gives me the information I need to make graph 3 (year, number of songs remixed, number of censors, and number of censors per song)
+```
+
 ## Graph 1
 
 ```{r}
@@ -73,9 +88,7 @@ censor_type_and_genre |>
 
 This graph plots censor number and type from Kidz Bop songs grouped by genre. From this graph we can learn about the different genres of music that Kidz Bop censors, and the different censor types used by each genre. We can see that the most common song that Kidz Bop creates censored versions of is pop, followed by edm, r&b, latin, music that has no genre classification, rock, and lastly rap. This tells us about the kind of music that kids are interested in hearing because Kidz Bop would only censor and produce music that will do well with their target audience. From this graph we can also learn about the different types of censors that happen most in each genre type. For example in the pop genre we can see that alcohol & drugs is the most common censor type and the least common is identity.
 
-### Problem!!
-
-If you're curious about the specific values of the variables represented in the graph I've created a tibble below with these numbers. **if you have time actually make this 6 tibbles with the different genres**
+If you're curious about the specific values of the variables represented in the graph I've created a tibble below with these numbers.
 
 ```{r}
 tibble(censor_type_and_genre) |>
@@ -108,23 +121,6 @@ This graph shows the proportion of each genre than a single censor type represen
 ## Graph 3
 
 ```{r}
-years <- KB_censored_lyrics |>
-  count(year) 
-#creates a dataset with how many censors there are from each year represented in the dataset
-```
-
-```{r}
-songs <- KB_censored_lyrics |>
-  count(year,songName) |>
-  count(year) |>
-  mutate(num_songs = n) |>
-  select(-n) |>
-  left_join(years, join_by(year)) |>
-  mutate(censors_per_song = n/num_songs) 
-#makes a tibble that gives me the information I need to make the next plot (year, number of songs remixed, number of censors, and number of censors per song)
-```
-
-```{r}
 songs |>
   ggplot(aes(x = year, y = censors_per_song)) +
   geom_point() +
@@ -139,35 +135,7 @@ correlation_coefficient <- cor(songs$year, songs$censors_per_song)
 print(correlation_coefficient)
 ```
 
-In this graph I have plotted censors per song against year. This graph can tell us about the relationship between the year and the average amount of censors used per song. Generally this graph has a positive relationship, but the year 
-
-
-```{r}
-songs_wo_2015 <- KB_censored_lyrics |>
-  count(year,songName) |>
-  count(year) |>
-  mutate(num_songs = n) |>
-  select(-n) |>
-  left_join(years, join_by(year)) |>
-  mutate(censors_per_song = n/num_songs) |>
-  filter(year != c(2015)) 
-#makes a tibble that gives me the information I need to make the next plot (year, number of songs remixed, number of censors, and number of censors per song, !-2015!)
-```
-
-```{r}
-songs_wo_2015 |>
-  ggplot(aes(x = year, y = censors_per_song)) +
-  geom_point() +
-  geom_smooth(color = "limegreen", se = FALSE) +
-  labs(title = "Censors per Song by Year",
-       x = "Year",
-       y = "Censors per Song",
-       caption = "data from github.com/the-pudding/data") +
-  theme_bw()
-
-correlation_coefficient <- cor(songs$year, songs$censors_per_song)
-print(correlation_coefficient)
-```
+In this graph I have plotted censors per song against year. This graph can tell us about the relationship between the year and the average amount of censors used per song. The relationship in the graph is a moderate positive relationship with a correlation coefficient of 0.68. This data set doesn't cover very many years, and possibly with more years of data we could get a better idea of what the relationship is like between the two variables.
 
 ## Graph 4
 
@@ -188,9 +156,10 @@ KB_censored_lyrics |>
             min_songs = min(n),
             sd_songs = sd(n),
             med_songs = median(n)) 
+#summary statistics
 ```
 
-From this plot we can learn about frequency of artist appearances in Kidz Bop remixes. Most artists have fewer than 20 censors on all their songs that appear, but there are some artists whose songs have up to 52 censors on their songs. This tells us about the kinds of songs that Kidz Bop is remixing. Kidz Bop likely doesn't remix songs that require a lot of time and money to produce, which would be the songs with more sections that need censoring. I also included summary statistics for the frequency of artist appearances if you want to see what the spread of the data was like. 
+From this plot we can learn about frequency of artist appearances in Kidz Bop remixes. Most artists have fewer than 20 censors on all their songs that appear, but there are some artists whose songs have up to 52 censors on their songs. This tells us about the kinds of songs that Kidz Bop is remixing. Kidz Bop likely doesn't remix songs that require a lot of time and money to produce, which would be the songs with more sections that need censoring. I also included summary statistics for the frequency of artist appearances if you want to see what the spread of the data was like.
 
 ## Bonus Tibble
 
@@ -203,5 +172,4 @@ as_tibble(number_songs) |>
   select(-x)
 ```
 
-Here I also create a tibble that shows all of the songs that have a number in the title. Out of all 280 of the songs from the original data set, only 7 of them include numbers in the title.
-
+Here I also create a tibble that shows all of the songs that have a number in the title. Out of all 280 of the songs from the original data set, only 7 of them include numbers in the title!
