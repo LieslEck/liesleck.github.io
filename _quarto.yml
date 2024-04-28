@@ -10,6 +10,7 @@ website:
         text: Home
       - sidebar:maps
       - sidebar:projects
+      - sidebar:rtotd
   
   sidebar:
     - id: maps
@@ -24,6 +25,10 @@ website:
         - mini_proj_2.qmd
         - mini_proj_3.qmd
         
+    - id: rtotd
+      title: "R Tip of the Day"
+      contents:
+        - Rtotd.qmd
 
 
   page-footer:

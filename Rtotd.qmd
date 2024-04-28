@@ -1,0 +1,86 @@
+---
+title: "R tip of the day"
+author: Liesl Eckstrom
+format: html
+sidebar: false
+editor_options: 
+  chunk_output_type: console
+---
+
+## Libraries and data
+
+```{r, message = FALSE}
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+library(Stat2Data)
+library(ggThemeAssist)
+data("AccordPrice")
+data("Backpack")
+data("ChildSpeaks")
+```
+
+## ggThemeAssist
+
+```{r}
+a <- AccordPrice |>
+  ggplot() +
+  geom_point(aes(x = Price, y = Mileage))
+#my code to make a simple plot ^
+a + theme(plot.subtitle = element_text(family = "serif",
+    colour = "black"), plot.caption = element_text(family = "serif",
+    colour = "black"), panel.grid.major = element_line(colour = "lavender"),
+    panel.grid.minor = element_line(colour = "lavender"),
+    axis.title = element_text(family = "serif",
+        size = 12, face = "bold"), axis.text = element_text(family = "serif",
+        face = "bold", colour = "lavender"),
+    axis.text.x = element_text(family = "serif"),
+    plot.title = element_text(family = "serif",
+        size = 25, face = "bold", hjust = 0.5),
+    panel.background = element_rect(fill = "white")) +labs(title = "Price of Used Honda Accords by Mileage",
+    caption = "data from Stat2Data package")
+#ggThemeAssist's addition to edit the style ^
+```
+
+```{r}
+b <- Backpack |>
+  filter(Year != 0) |>
+  ggplot() +
+  geom_boxplot(aes(y = BackpackWeight)) +
+  facet_wrap(~Year)
+#my code to make a simple plot ^
+b + theme(plot.caption = element_text(colour = "midnightblue"),
+    panel.grid.major = element_line(colour = "midnightblue",
+        linetype = "dotted"), panel.grid.minor = element_line(colour = "midnightblue",
+        linetype = "dotted"), axis.title = element_text(colour = "midnightblue"),
+    plot.title = element_text(size = 28,
+        colour = "midnightblue", hjust = 0.5),
+    panel.background = element_rect(fill = NA)) +labs(title = "Backpack Weight by Year in College",
+    y = "Backpack Weight", caption = "data from Stat2Data package")
+#ggThemeAssist's addition to edit the style ^
+```
+
+```{r}
+c <- ChildSpeaks |>
+  filter(Age != 42) |>
+  ggplot() +
+  geom_bar(aes(x = Age), fill = "hotpink")
+#my code to make a simple plot ^
+c + theme(plot.subtitle = element_text(family = "mono",
+    face = "italic", colour = "limegreen"),
+    axis.ticks = element_line(colour = "royalblue3",
+        linetype = "dotted"), panel.grid.major = element_line(colour = "limegreen",
+        linetype = "dashed"), panel.grid.minor = element_line(colour = "limegreen",
+        linetype = "dashed"), axis.title = element_text(colour = "limegreen"),
+    axis.text = element_text(family = "mono"),
+    axis.text.x = element_text(family = "mono"),
+    plot.title = element_text(family = "mono",
+        size = 20, face = "italic", colour = "hotpink"),
+    panel.background = element_rect(fill = "black")) +labs(title = "Age of First Word ", x = "Age (in months)",
+    y = "Count", subtitle = "data from Stat2Data")
+#ggThemeAssist's addition to edit the style ^
+```
+
+Refrence
+
+https://github.com/calligross/ggthemeassist/tree/master
